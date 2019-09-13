@@ -38,29 +38,35 @@ passport.serializeUser((user, callback) => {
 });
 
 passport.deserializeUser((id, callback) => {
-  User.findById(id, (error, user) => {
-    if (error) return callback(error);
-    callback(null, user);
-  });
+  User.findById(id)
+    .then(user => {
+      callback(null, user);
+    })
+    .catch(error => {
+      callback(error);
+    });
 });
 
 passport.use('local-login', new LocalStrategy((username, password, callback) => {
   User.findOne({
     username
-  }, (error, user) => {
-    if (error) return callback(error);
-    if (!user) {
-      return callback(null, false, {
-        message: "Incorrect username"
-      });
-    }
-    if (!bcrypt.compareSync(password, user.password)) {
-      return callback(null, false, {
-        message: "Incorrect password"
-      });
-    }
-    return callback(null, user);
-  });
+  })
+    .then(user => {
+      if (!user) {
+        return callback(null, false, {
+          message: "Incorrect username"
+        });
+      }
+      if (!bcrypt.compareSync(password, user.password)) {
+        return callback(null, false, {
+          message: "Incorrect password"
+        });
+      }
+      callback(null, user);
+    })
+    .catch(error => {
+      callback(error);
+    });
 }));
 
 passport.use('local-signup', new LocalStrategy({
@@ -69,12 +75,10 @@ passport.use('local-signup', new LocalStrategy({
   // To avoid race conditions
   process.nextTick(() => {
     User.findOne({
-      'username': username
-    }, (error, user) => {
-      if (error) return callback(error);
-      if (user) {
-        return callback(null, false);
-      } else {
+      username
+    })
+      .then(user => {
+        if (user) return callback(null, false);
         // Destructure the body
         const {
           username,
@@ -87,16 +91,17 @@ passport.use('local-signup', new LocalStrategy({
           email,
           password: hashPass
         });
-        newUser.save(error => {
-          if (error) {
-            return callback(null, false, {
-              message: newUser.errors
-            });
-          }
-          callback(null, newUser);
-        });
-      }
-    });
+        newUser.save()
+          .then(user => {
+            callback(null, user);
+          })
+          .catch(error => {
+            callback(null, false, error);
+          });
+      })
+      .catch(error => {
+        callback(error);
+      });
   });
 }));
 
