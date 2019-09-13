@@ -32,3 +32,6 @@ npm-debug.log
 
 # Allow modules to be freshly resolved from npm every time
 package-lock.json
+
+# Disallow development only tools
+.eslintrc.json
