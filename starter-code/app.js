@@ -14,7 +14,10 @@ const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const hbs = require('hbs');
 
-mongoose.connect('mongodb://localhost:27017/tumblr-lab-development');
+mongoose.connect('mongodb://localhost:27017/tumblr-lab-development', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 const app = express();
 
@@ -30,53 +33,47 @@ app.use(session({
   })
 }));
 
-passport.serializeUser((user, cb) => {
-  cb(null, user.id);
+passport.serializeUser((user, callback) => {
+  callback(null, user.id);
 });
 
-passport.deserializeUser((id, cb) => {
-  User.findById(id, (err, user) => {
-    if (err) {
-      return cb(err);
-    }
-    cb(null, user);
+passport.deserializeUser((id, callback) => {
+  User.findById(id, (error, user) => {
+    if (error) return callback(error);
+    callback(null, user);
   });
 });
 
-passport.use('local-login', new LocalStrategy((username, password, next) => {
+passport.use('local-login', new LocalStrategy((username, password, callback) => {
   User.findOne({
     username
-  }, (err, user) => {
-    if (err) {
-      return next(err);
-    }
+  }, (error, user) => {
+    if (error) return callback(error);
     if (!user) {
-      return next(null, false, {
+      return callback(null, false, {
         message: "Incorrect username"
       });
     }
     if (!bcrypt.compareSync(password, user.password)) {
-      return next(null, false, {
+      return callback(null, false, {
         message: "Incorrect password"
       });
     }
-    return next(null, user);
+    return callback(null, user);
   });
 }));
 
 passport.use('local-signup', new LocalStrategy({
   passReqToCallback: true
-}, (req, username, password, next) => {
+}, (req, username, password, callback) => {
   // To avoid race conditions
   process.nextTick(() => {
     User.findOne({
       'username': username
-    }, (err, user) => {
-      if (err) {
-        return next(err);
-      }
+    }, (error, user) => {
+      if (error) return callback(error);
       if (user) {
-        return next(null, false);
+        return callback(null, false);
       } else {
         // Destructure the body
         const {
@@ -90,13 +87,13 @@ passport.use('local-signup', new LocalStrategy({
           email,
           password: hashPass
         });
-        newUser.save((err) => {
-          if (err) {
-            next(null, false, {
+        newUser.save(error => {
+          if (error) {
+            return callback(null, false, {
               message: newUser.errors
             });
           }
-          return next(null, newUser);
+          callback(null, newUser);
         });
       }
     });
@@ -121,9 +118,9 @@ app.use('/', authRoutes);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+  const error = new Error('Not Found');
+  error.status = 404;
+  next(error);
 });
 
 // error handler
