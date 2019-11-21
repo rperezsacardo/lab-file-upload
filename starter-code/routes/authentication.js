@@ -1,44 +1,75 @@
-const express = require('express');
-const passport = require('passport');
-const router = express.Router();
-const {
-  ensureLoggedIn,
-  ensureLoggedOut
-} = require('connect-ensure-login');
+const { Router } = require('express');
+const router = new Router();
 
-router.get('/login', ensureLoggedOut(), (req, res) => {
-  res.render('authentication/login', {
-    message: req.flash('error')
-  });
+const User = require('./../models/user');
+const bcryptjs = require('bcryptjs');
+
+router.get('/', (req, res, next) => {
+  res.render('index');
 });
 
-router.post('/login', ensureLoggedOut(), passport.authenticate('local-login', {
-  successRedirect: '/',
-  failureRedirect: '/login',
-  failureFlash: true
-}));
-
-router.get('/signup', ensureLoggedOut(), (req, res) => {
-  res.render('authentication/signup', {
-    message: req.flash('error')
-  });
+router.get('/sign-up', (req, res, next) => {
+  res.render('sign-up');
 });
 
-router.post('/signup', ensureLoggedOut(), passport.authenticate('local-signup', {
-  successRedirect: '/',
-  failureRedirect: '/signup',
-  failureFlash: true
-}));
-
-router.get('/profile', ensureLoggedIn('/login'), (req, res) => {
-  res.render('authentication/profile', {
-    user: req.user
-  });
+router.post('/sign-up', (req, res, next) => {
+  const { name, email, password } = req.body;
+  bcryptjs
+    .hash(password, 10)
+    .then(hash => {
+      return User.create({
+        name,
+        email,
+        passwordHash: hash
+      });
+    })
+    .then(user => {
+      req.session.user = user._id;
+      res.redirect('/');
+    })
+    .catch(error => {
+      next(error);
+    });
 });
 
-router.get('/logout', ensureLoggedIn('/login'), (req, res) => {
-  req.logout();
+router.get('/sign-in', (req, res, next) => {
+  res.render('sign-in');
+});
+
+router.post('/sign-in', (req, res, next) => {
+  let userId;
+  const { email, password } = req.body;
+  User.findOne({ email })
+    .then(user => {
+      if (!user) {
+        return Promise.reject(new Error("There's no user with that email."));
+      } else {
+        userId = user._id;
+        return bcryptjs.compare(password, user.passwordHash);
+      }
+    })
+    .then(result => {
+      if (result) {
+        req.session.user = userId;
+        res.redirect('/');
+      } else {
+        return Promise.reject(new Error('Wrong password.'));
+      }
+    })
+    .catch(error => {
+      next(error);
+    });
+});
+
+router.post('/sign-out', (req, res, next) => {
+  req.session.destroy();
   res.redirect('/');
+});
+
+const routeGuard = require('./../middleware/route-guard');
+
+router.get('/private', routeGuard, (req, res, next) => {
+  res.render('private');
 });
 
 module.exports = router;
