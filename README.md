@@ -1,4 +1,5 @@
-![Ironhack Logo](https://i.imgur.com/1QgrNNw.png)
+![logo_ironhack_blue 7](https://user-images.githubusercontent.com/23629340/40541063-a07a0a8a-601a-11e8-91b5-2f13e4e6b441.png)
+
 # Express File Uploads | IronTumblr
 
 ## Requirements
@@ -15,16 +16,14 @@ $ git add .
 $ git commit -m "done"
 $ git push origin master
 ```
+
 Navigate to your repo and create a Pull Request -from your master branch to the original repository master branch.
 
 In the Pull request name, add your name and last names separated by a dash "-".
 
-Include a link to your deployed heroku app in the pull request.
-
 ## Deliverables
 
 Complete all of the non-bonus iterations. No styling is required, but is suggested as bonus.
-
 
 ## Instructions
 
@@ -59,7 +58,7 @@ A post should have the following attributes:
 
 For this iteration you must create the **model**, along with the **new**, **create**, **show** and **index** routes. This should include file uploading.
 
-A user should be logged in to create a post, but *not* to view.
+A user should be logged in to create a post, but _not_ to view.
 
 The **index** will be the home page, and simply display all of the posts on the website.
 
@@ -67,7 +66,7 @@ The **index** will be the home page, and simply display all of the posts on the 
 
 Posts have comments attached to them. Create the Comment model as a subdocument of the Post.
 
-A comment *can* have images attached to it, but not all do.
+A comment _can_ have images attached to it, but not all do.
 
 The model should have the following attributes:
 
@@ -76,10 +75,6 @@ The model should have the following attributes:
 - `imagePath`
 - `imageName`
 
-You should create routes to create new comments. Comments should be displayed on the Post *show* page.
+You should create routes to create new comments. Comments should be displayed on the Post _show_ page.
 
-### Iteration 4 | Deploy!
-
-The last step in IronTumblr should be to deploy to Heroku. Don't forget to deploy your database on mongolab.
-
-Your site should be live and functioning with a working URL.
+Happy Coding 💙
