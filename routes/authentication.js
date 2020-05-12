@@ -4,6 +4,8 @@ const router = new Router();
 const User = require('./../models/user');
 const bcryptjs = require('bcryptjs');
 
+const uploader = require('./../middleware/uploader');
+
 router.get('/', (req, res, next) => {
   res.render('index');
 });
@@ -12,22 +14,24 @@ router.get('/sign-up', (req, res, next) => {
   res.render('sign-up');
 });
 
-router.post('/sign-up', (req, res, next) => {
+router.post('/sign-up', uploader.single('avatar'), (req, res, next) => {
   const { name, email, password } = req.body;
+  const avatar = req.file.url;
   bcryptjs
     .hash(password, 10)
-    .then(hash => {
+    .then((hash) => {
       return User.create({
         name,
         email,
-        passwordHash: hash
+        passwordHash: hash,
+        avatar,
       });
     })
-    .then(user => {
+    .then((user) => {
       req.session.user = user._id;
       res.redirect('/');
     })
-    .catch(error => {
+    .catch((error) => {
       next(error);
     });
 });
@@ -40,7 +44,7 @@ router.post('/sign-in', (req, res, next) => {
   let userId;
   const { email, password } = req.body;
   User.findOne({ email })
-    .then(user => {
+    .then((user) => {
       if (!user) {
         return Promise.reject(new Error("There's no user with that email."));
       } else {
@@ -48,7 +52,7 @@ router.post('/sign-in', (req, res, next) => {
         return bcryptjs.compare(password, user.passwordHash);
       }
     })
-    .then(result => {
+    .then((result) => {
       if (result) {
         req.session.user = userId;
         res.redirect('/');
@@ -56,7 +60,7 @@ router.post('/sign-in', (req, res, next) => {
         return Promise.reject(new Error('Wrong password.'));
       }
     })
-    .catch(error => {
+    .catch((error) => {
       next(error);
     });
 });

@@ -11,6 +11,8 @@ const MongoStore = connectMongo(expressSession);
 
 const indexRouter = require('./routes/index');
 const authenticationRouter = require('./routes/authentication');
+const postRouter = require('./routes/post');
+
 const User = require('./models/user');
 
 const app = express();
@@ -25,9 +27,10 @@ app.use(
   sassMiddleware({
     src: join(__dirname, 'public'),
     dest: join(__dirname, 'public'),
-    outputStyle: process.env.NODE_ENV === 'development' ? 'nested' : 'compressed',
+    outputStyle:
+      process.env.NODE_ENV === 'development' ? 'nested' : 'compressed',
     sourceMap: false,
-    force: true
+    force: true,
   })
 );
 app.use(express.static(join(__dirname, 'public')));
@@ -41,12 +44,12 @@ app.use(
       maxAge: 60 * 60 * 24 * 15,
       sameSite: true,
       httpOnly: true,
-      secure: process.env.NODE_ENV !== 'development'
+      secure: process.env.NODE_ENV !== 'development',
     },
     store: new MongoStore({
       mongooseConnection: mongoose.connection,
-      ttl: 60 * 60 * 24
-    })
+      ttl: 60 * 60 * 24,
+    }),
   })
 );
 
@@ -54,12 +57,12 @@ app.use((req, res, next) => {
   const userId = req.session.user;
   if (userId) {
     User.findById(userId)
-      .then(user => {
+      .then((user) => {
         req.user = user;
         res.locals.user = req.user;
         next();
       })
-      .catch(error => {
+      .catch((error) => {
         next(error);
       });
   } else {
@@ -68,6 +71,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/', indexRouter);
+app.use('/post', postRouter);
 app.use('/', authenticationRouter);
 
 app.use('*', (req, res, next) => {

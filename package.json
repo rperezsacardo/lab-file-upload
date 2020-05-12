@@ -1,5 +1,5 @@
 {
-  "name": "node-basic-authentication",
+  "name": "basic-authentication",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.21.0",
     "connect-mongo": "^3.1.2",
     "debug": "^4.1.1",
     "dotenv": "^8.1.0",
@@ -19,6 +20,8 @@
     "http-errors": "^1.7.3",
     "mongoose": "^=5.6.13",
     "morgan": "^1.9.1",
+    "multer": "^1.4.2",
+    "multer-storage-cloudinary": "^2.2.1",
     "node-sass-middleware": "0.11.0",
     "serve-favicon": "^2.5.0"
   },
@@ -33,5 +36,17 @@
     "eslint-plugin-prettier": "^3.1.1",
     "prettier": "^1.18.2",
     "@ironh/eslint-config": "0.0.2"
-  }
+  },
+  "description": "![logo_ironhack_blue 7](https://user-images.githubusercontent.com/23629340/40541063-a07a0a8a-601a-11e8-91b5-2f13e4e6b441.png)",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rperezsacardo/lab-file-upload.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rperezsacardo/lab-file-upload/issues"
+  },
+  "homepage": "https://github.com/rperezsacardo/lab-file-upload#readme"
 }

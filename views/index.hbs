@@ -1,1 +1,10 @@
 <p>Welcome to our Lab!</p>
+
+{{#each post }}
+<article>
+  <h3>{{title}}</h3>
+  <h4>{{ creatorId.email }}</h4>
+  <p>{{content}}</p>
+  <img src="{{pictureUrl}}" alt="">
+</article>
+{{/each}}
