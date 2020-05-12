@@ -23,32 +23,30 @@ In the Pull request name, add your name and last names separated by a dash "-".
 
 ## Deliverables
 
-Complete all of the non-bonus iterations. No styling is required, but is suggested as bonus.
+Complete all of the non-bonus iterations. No styling is required, but it is suggested as bonus.
 
 ## Instructions
 
 ## Introduction
 
-<img src="https://s3-eu-west-1.amazonaws.com/ih-materials/uploads/upload_c0b2a46765e63ac8ac589835f7bb92ea.png" width="500px">
-
-[Tumblr](tumblr.com) is an ultra popular microblogging website.
+[Instagram](instagram.com) is an ultra popular mobile app to share photos.
 
 ### Iteration 1 | User Profile Pictures
 
-We've already provided a User model and the authentication logic. Unfortunately, the user doesn't have a profile picture.
+We've already provided a `User` model and the authentication logic. Unfortunately, the user doesn't have a profile picture.
 
 Fix the User Registration so that it allows the user to upload a file as their profile image.
 
 ### Iteration 2 | Posts
 
-In this iteration, create the bread and butter of Tumblr, the Post.
+In this iteration, create the bread and butter of Instagram, the Post.
 
 A post should have the following attributes:
 
 - `content` - Text belonging to the post
 - `creatorId` - ObjectId of the post's creator
-- `picPath` - Where the picture is stored
-- `picName` - The picture's name
+- `pictureUrl` - Where the picture is stored
+- `pictureName` - The picture's name
 
 For this iteration you must create the **model**, along with the **new**, **create**, **show** and **index** routes. This should include file uploading.
 
@@ -58,7 +56,7 @@ The **index** will be the home page, and simply display all of the posts on the 
 
 ### Iteration 3 | Comments
 
-Posts have comments attached to them. Create the Comment model as a subdocument of the Post.
+Posts have comments attached to them. Create the `Comment` model as a subdocument of the `Post`. You can read more about subdocuments in the [mongoose documentation](https://mongoosejs.com/docs/subdocs.html).
 
 A comment _can_ have images attached to it, but not all do.
 
@@ -66,7 +64,7 @@ The model should have the following attributes:
 
 - `content`
 - `authorId`
-- `imagePath`
+- `imageUrl`
 - `imageName`
 
 You should create routes to create new comments. Comments should be displayed on the Post _show_ page.
