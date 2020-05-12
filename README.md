@@ -1,6 +1,6 @@
 ![logo_ironhack_blue 7](https://user-images.githubusercontent.com/23629340/40541063-a07a0a8a-601a-11e8-91b5-2f13e4e6b441.png)
 
-# Express File Uploads | IronTumblr
+# Express File Upload
 
 ## Requirements
 
@@ -33,15 +33,9 @@ Complete all of the non-bonus iterations. No styling is required, but is suggest
 
 [Tumblr](tumblr.com) is an ultra popular microblogging website.
 
-**A microblog is:**
-
-> A social media site to which a user makes short, frequent posts.
-
-This is easier shown than described, so check out [this tumblr](http://bestdogmemes.tumblr.com/) filled with funny dog memes.
-
 ### Iteration 1 | User Profile Pictures
 
-In the starter code, we've already provided a User model and the authentication logic. Unfortunately, the user doesn't have a profile picture.
+We've already provided a User model and the authentication logic. Unfortunately, the user doesn't have a profile picture.
 
 Fix the User Registration so that it allows the user to upload a file as their profile image.
 
